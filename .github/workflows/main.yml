@@ -25,6 +25,6 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          files: backend.exe
+          files: backend
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
