@@ -3,28 +3,28 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: '1.22.5'
-    - name: Build the Go application
-      run: |
-        go build -o backend.exe backend.go
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.22.5"
+      - name: Build the Go application
+        run: |
+          go build -o backend backend.go
 
-    - name: Create release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: backend.exe
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: backend.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
