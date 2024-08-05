@@ -1,4 +1,5 @@
-// Backend for Roblox-Api-Tracker
+// Backend for Roblox-Api-Tracker v2
+// Rewrote in GoLang (performance)
 
 package main
 
