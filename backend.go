@@ -117,8 +117,8 @@ func processEndpoints() error {
 
 	api := make(map[string]map[string]interface{})
 	for _, url := range endpoints {
-		folder := fmt.Sprintf("out/%s", strings.Split(url, ".")[0])
-		data, err := handleEndpoint(url, folder)
+		folder := strings.Split(url, ".")[0]
+		data, err := handleEndpoint(url,  fmt.Sprintf("out/%s", folder))
 		if err != nil {
 			fmt.Println("Error:", err)
 			continue
