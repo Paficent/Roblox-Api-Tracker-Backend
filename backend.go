@@ -79,7 +79,7 @@ func saveToFile(folder, version, content string) error {
 
 func handleEndpoint(url string, folder string) (map[string]interface{}, error) {
 	out := make(map[string]interface{})
-	for i := 1; i < 5; i++ {
+	for i := 1; i < 4; i++ {
 		version := fmt.Sprintf("v%d", i)
 		data, err := fetchAndSaveVersionData(url, version, folder)
 		if err != nil {
