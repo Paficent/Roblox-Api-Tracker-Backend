@@ -115,30 +115,14 @@ func processEndpoints() error {
 		return err
 	}
 
-	api := make(map[string]map[string]interface{})
 	for _, url := range endpoints {
 		folder := strings.Split(url, ".")[0]
-		data, err := handleEndpoint(url,  fmt.Sprintf("out/%s", folder))
+		data, err := handleEndpoint(url, fmt.Sprintf("%s", folder))
 		if err != nil {
 			fmt.Println("Error:", err)
 			continue
 		}
-		api[folder] = data
 	}
-
-	sortedApi, err := sortAPI(api)
-	if err != nil {
-		return err
-	}
-
-	formatted, err := formatJSON(sortedApi)
-	if err != nil {
-		return err
-	}
-
-	// if err := os.WriteFile("api.json", []byte(formatted), 0644); err != nil {
-	// 	return fmt.Errorf("failed to write API file: %w", err)
-	// }
 
 	return nil
 }
