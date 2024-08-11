@@ -7,4 +7,4 @@ prompt="This git diff describes changes made to Roblox's api using OpenAPI json 
 response=$(curl -X POST http://localhost:11434/api/generate -d "{\"model\": \"mistral\", \"prompt\": \"$prompt\"}")
 python -c "import json, sys; print(json.loads(sys.stdin.read())['response'])" <<< "$response"
 
-git commit -m "Ai Generated Summary: $commit_message\nFiles Changed: $changsd_files"
+git commit -m "$(printf "Generated Summary: %s\nFiles Changed: %s" "$commit_message" "$changed_files")"
