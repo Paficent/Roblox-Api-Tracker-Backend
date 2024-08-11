@@ -136,9 +136,9 @@ func processEndpoints() error {
 		return err
 	}
 
-	if err := os.WriteFile("api.json", []byte(formatted), 0644); err != nil {
-		return fmt.Errorf("failed to write API file: %w", err)
-	}
+	// if err := os.WriteFile("api.json", []byte(formatted), 0644); err != nil {
+	// 	return fmt.Errorf("failed to write API file: %w", err)
+	// }
 
 	return nil
 }
