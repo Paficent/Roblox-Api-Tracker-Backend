@@ -38,32 +38,32 @@ func scrapeEndpoint(url string) (*http.Response, error) {
 	return resp, nil
 }
 
-func fetchAndSaveVersionData(url, version, folder string) (map[string]interface{}, error) {
+func fetchAndSaveVersionData(url, version, folder string) error {
 	response, err := scrapeEndpoint(fmt.Sprintf("https://%s/docs/json/%s", url, version))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer response.Body.Close()
 
 	var jsonData interface{}
 	if err := json.NewDecoder(response.Body).Decode(&jsonData); err != nil {
-		return nil, fmt.Errorf("failed to decode JSON from URL %s: %w", response.Request.URL, err)
+		return fmt.Errorf("failed to decode JSON from URL %s: %w", response.Request.URL, err)
 	}
 
 	if jsonDataMap, ok := jsonData.(map[string]interface{}); ok && jsonDataMap["errors"] != nil {
-		return nil, nil
+		return nil
 	}
 
 	formatted, err := formatJSON(jsonData)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := saveToFile(folder, version, formatted); err != nil {
-		return nil, err
+		return err
 	}
 
-	return jsonData.(map[string]interface{}), nil
+	return nil
 }
 
 func saveToFile(folder, version, content string) error {
@@ -77,22 +77,17 @@ func saveToFile(folder, version, content string) error {
 	return nil
 }
 
-func handleEndpoint(url string, folder string) (map[string]interface{}, error) {
-	out := make(map[string]interface{})
+func handleEndpoint(url string, folder string) {
 	for i := 1; i < 4; i++ {
 		version := fmt.Sprintf("v%d", i)
-		data, err := fetchAndSaveVersionData(url, version, folder)
+		err := fetchAndSaveVersionData(url, version, folder)
 		if err != nil {
 			if err != nil {
 				fmt.Println("Warning:", err)
 			}
 			continue
 		}
-		if data != nil {
-			out[version] = data
-		}
 	}
-	return out, nil
 }
 
 func loadEndpoints(filename string) ([]string, error) {
@@ -117,11 +112,7 @@ func processEndpoints() error {
 
 	for _, url := range endpoints {
 		folder := strings.Split(url, ".")[0]
-		data, err := handleEndpoint(url, fmt.Sprintf("%s", folder))
-		if err != nil {
-			fmt.Println("Error:", err)
-			continue
-		}
+		handleEndpoint(url, fmt.Sprintf("%s", folder))
 	}
 
 	return nil
@@ -148,4 +139,3 @@ func main() {
 		os.Exit(1)
 	}
 }
-
