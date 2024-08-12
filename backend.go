@@ -118,21 +118,6 @@ func processEndpoints() error {
 	return nil
 }
 
-func sortAPI(api map[string]map[string]interface{}) (map[string]interface{}, error) {
-	keys := make([]string, 0, len(api))
-	for k := range api {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-
-	sortedApi := make(map[string]interface{})
-	for _, k := range keys {
-		sortedApi[k] = api[k]
-	}
-
-	return sortedApi, nil
-}
-
 func main() {
 	if err := processEndpoints(); err != nil {
 		fmt.Println("Error:", err)
