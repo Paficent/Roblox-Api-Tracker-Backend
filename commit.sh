@@ -4,11 +4,14 @@
 git_diff=$(git diff --summary -b)
 changed_files=$(git diff --name-only | awk -F '.' '{print $1}')
 
-prompt="This git diff describes changes made to Roblox's API using OpenAPI JSON documentation format. Summarize this diff in 7 words or less per file: $git_diff"
+input="Summarize the following git diff in a commit message: $git_diff"
+commit_message=$(ollama run tavernari/git-commit-message --input "$input")
 
-response=$(curl -s -X POST http://localhost:11434/api/generate -d "{\"model\": \"mistral\", \"prompt\": \"$prompt\"}")
+# Check if the model returned a message
+if [ -z "$commit_message" ]; then
+  echo "Error: No commit message generated."
+  exit 1
+fi
 
-json_data=$(echo "$response" | grep -o '{.*}' | tail -n 1)
-summary=$(python -c "import json, sys; data=json.loads(sys.stdin.read()); print(data['response'])" <<< "$json_data")
-
-git commit -m "$(printf "Generated Summary: %s\n%s" "$summary" "$changed_files")"
+# Commit changes with the generated message
+git commit -m "$commit_message"
